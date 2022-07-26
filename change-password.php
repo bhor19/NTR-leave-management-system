@@ -1,43 +1,77 @@
 <?php
 require('db.inc.php');
-$Name = $_SESSION["USER_NAME"];/* userid of the user */
-$currentPassword="";
-$confirmPassword="";
-if(count($_POST)>0) {
-$result = mysqli_query($con,"SELECT *from tblemployees WHERE Name='" . $Name . "'");
-$row=mysqli_fetch_array($result);
-if($_POST["currentPassword"] == $row["Password"] && $_POST["newPassword"] == $row["confirmPassword"] ) 
+
+$EmpId=$_SESSION['USER_ID'];
+if(isset($_POST['change']))
 {
-$query=mysqli_query($con,"UPDATE tblemployees set Password='" . $_POST["newPassword"] . "' WHERE Name='" . $Name . "'");
-echo print_r($query);
-$message = "Password Changed Sucessfully";
-} else{
- $message = "Password is not correct";
+$EmpId=$_POST['EmpId'];
+$newpassword=$_POST['newpassword'];	
+$query="update tblemployees SET Password='$newpassword' where EmpId='$EmpId'";
+$data=mysqli_query($con,$query);
+if($data)
+{
+	echo "<script> alert('Password Updated')</script>";
+     header("Location:login.php");	
+}
+else{
+	echo "Failed to change password";
 }
 }
+
 ?>
-
-<html>
-<head>
-<title>Password Change</title>
-
-</head>
-<body>
-<h3 align="center">CHANGE PASSWORD</h3>
-<div><?php if(isset($message)) { echo $message; } ?></div>
-<form method="post" action="" align="center">
-Current Password:<br>
-<input type="password" name="currentPassword"><span id="currentPassword" class="required"></span>
-<br>
-New Password:<br>
-<input type="password" name="newPassword"><span id="newPassword" class="required"></span>
-<br>
-Confirm Password:<br>
-<input type="password" name="confirmPassword"><span id="confirmPassword" class="required"></span>
-<br><br>
-<input type="submit">
-</form>
-<br>
-<br>
-</body>
+<!doctype html>
+<html class="no-js" lang="">
+   <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+   <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Change Password Page</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="stylesheet" href="assets/css/normalize.css">
+      <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+      <link rel="stylesheet" href="assets/css/font-awesome.min.css">
+      <link rel="stylesheet" href="assets/css/themify-icons.css">
+      <link rel="stylesheet" href="assets/css/pe-icon-7-filled.css">
+      <link rel="stylesheet" href="assets/css/flag-icon.min.css">
+      <link rel="stylesheet" href="assets/css/cs-skin-elastic.css">
+      <link rel="stylesheet" href="assets/css/style.css">
+      <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>
+   </head>
+   <body class="bg-dark">
+      <div class="sufee-login d-flex align-content-center flex-wrap">
+         <div class="container">
+            <div class="login-content">
+               <div class="login-form mt-150">
+                  <form method="POST">
+                     <div class="form-group">
+                        <label>Emp Id</label>
+                        <input type="text" value="<?php echo $EmpId?>" name="EmpId"  class="form-control" readonly>
+                     </div>
+                     <div class="form-group">
+                        <label>New Password</label>
+                        <input type="password" name="newpassword" class="form-control" placeholder="New Password" required>
+                     </div>
+					 
+                     <a href="login.php"><input type="submit"  class="btn btn-success btn-flat m-b-30 m-t-30" name="change"></a>
+					 
+					    
+						
+                        
+                     
+					 
+					
+					 
+         
+                        
+                     
+					</form>
+               </div>
+            </div>
+         </div>
+      </div>
+      <script src="assets/js/vendor/jquery-2.1.4.min.js" type="text/javascript"></script>
+      <script src="assets/js/popper.min.js" type="text/javascript"></script>
+      <script src="assets/js/plugins.js" type="text/javascript"></script>
+      <script src="assets/js/main.js" type="text/javascript"></script>
+   </body>
 </html>

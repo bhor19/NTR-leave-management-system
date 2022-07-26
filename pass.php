@@ -78,8 +78,8 @@ function login_process()
                <div class="login-form mt-150">
                   <form method="POST">
                      <div class="form-group">
-                        <label>Emp Id</label>
-                        <input type="text" name="EmpId" class="form-control" placeholder="User Emp Id" required>
+                        <label>EmpId</label>
+                        <input type="text" name="EmpId" class="form-control" placeholder="User EmpId" required>
                      </div>
                      <div class="form-group">
                         <label>Password</label>

@@ -1,7 +1,8 @@
 <?php
 require('db.inc.php');
+include_once 'log.php';
 if(!isset($_SESSION['ROLE'])){
-	header('location:login.php');
+	header('location:pass.php');
 	die();
 }
 ?>
@@ -34,23 +35,40 @@ if(!isset($_SESSION['ROLE'])){
             <div id="main-menu" class="main-menu collapse navbar-collapse">
                <ul class="nav navbar-nav">
                   <li class="menu-title">Menu</li>
-                  <?php if($_SESSION['ROLE']==1){ ?>
+                  <?php if($_SESSION['ROLE']!='Employee'){ ?>
 				  <li class="menu-item-has-children dropdown">
-                     <a href="dashboard.php" > Dashboard</a>
+                     <a href="ntr-record.php" > NTR Record</a>
+                  </li>
+				  <li class="menu-item-has-children dropdown">
+                     <a href="dtr-record.php" > DTR Record</a>
                   </li>
                   <li class="menu-item-has-children dropdown">
                      <a href="employee.php" > Employee Details</a>
                   </li>
+				  
+				  
+				  <?php }
+				  if($_SESSION['ROLE']=='SuperAdmin'){?>
+				          
 				  <li class="menu-item-has-children dropdown">
                      <a href="admin.php" > Admin Details</a>
                   </li>
-				  
-				  <?php } else { ?>
+				  <li class="menu-item-has-children dropdown">
+                     <a href="logs-details.php" > Logs Details</a>
+                  </li>
+				  <li class="menu-item-has-children dropdown">
+                     <a href="backup.php" > Backup</a>
+                  </li>
+				  <?php } 
+				  if($_SESSION['ROLE']=='Employee') { ?>
 				  <li class="menu-item-has-children dropdown">
                      <a href="profile.php?id=<?php echo $_SESSION['USER_ID']?>" > Profile</a>
                   </li>
 				  <li class="menu-item-has-children dropdown">
                      <a href="ntr.php?id=<?php echo $_SESSION['USER_ID']?>" > NTR</a>
+                  </li>
+				  <li class="menu-item-has-children dropdown">
+                     <a href="dtr.php?id=<?php echo $_SESSION['USER_ID']?>" > DTR</a>
                   </li>
 				  <?php } ?>
 				   
@@ -71,13 +89,11 @@ if(!isset($_SESSION['ROLE'])){
             <div class="top-right">
                <div class="header-menu">
                   <div class="user-area dropdown float-right">
-                    <a href="#" class="dropdown-toggle active" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="images/admin.png" height="20" width="20" alt="Logo">&nbsp Welcome <?php echo $_SESSION['USER_NAME']?></a>
-                     <div class="user-menu dropdown-menu">
-                        <a class="nav-link" href="logout.php"><i class="fa fa-power-off"></i>Logout</a>
-					     </*a class="nav-link" href="change-password.php"></*i class="fa fa-power-off"></*/i></*/a>
-					 </div>
-					 
-                  </div>
+                   <img style="position:relative; left:10px; top:-5px;" src="images/admin.png" height="20" width="20" alt="Logo"><b style="position:relative; left:10px; top:-5px;">&nbsp; Welcome <?php echo $_SESSION['USER_NAME']?></b>&nbsp;&nbsp;&nbsp;&nbsp;
+                     <b><a style="position:relative; left:10px; top:-5px;" href="logout.php"><i class="fa fa-power-off"></i>Logout</a></b>&nbsp;
+					   <b><a  style="position:relative; left:20px; top:-5px;" href="change-password.php?id=<?php echo $_SESSION['USER_ID']?>"><i class="fa fa-power-off"></i>Change Password</a></b>
+			         </div>
                </div>
             </div>
          </header>
+		 

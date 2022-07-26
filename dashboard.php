@@ -100,7 +100,7 @@ $res=mysqli_query($con,"select * from ntr $sub_sql order by id desc");
 									   
 									   </th>
 									   
-									   <th width="30%">Reason</th>
+									   <th width="30%" style="text-align:left;">Reason</th>
 									   
                                     </tr>
                                  </thead>

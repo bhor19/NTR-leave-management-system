@@ -1,14 +1,24 @@
 <?php
 require('top.inc.php');
-if($_SESSION['ROLE']!=1){
+if($_SESSION['ROLE']=='Employee'){
 	header('location:profile.php?id='.$_SESSION['USER_ID']);
 	die();
 }
-if(isset($_GET['type']) && $_GET['type']=='delete' && isset($_GET['id'])){
-	$id=mysqli_real_escape_string($con,$_GET['id']);
-	mysqli_query($con,"delete from tblemployees where id='$id'");
+if($_SESSION['ROLE']=='SuperAdmin' ){
+if(isset($_GET['type']) && $_GET['type']=='delete' && isset($_GET['EmpId'])){
+	$EmpId=mysqli_real_escape_string($con,$_GET['EmpId']);
+	mysqli_query($con,"delete from tblemployees where EmpId='$EmpId'");
 }
-$res=mysqli_query($con,"select * from tblemployees where role=2 order by id desc");
+}
+$Department=$_SESSION['DEPARTMENT'];
+if($_SESSION['ROLE']=='Admin')
+{
+$res=mysqli_query($con,"select * from tblemployees where role='Employee' && Department='$Department' ");
+}
+else 
+{
+$res=mysqli_query($con,"select * from tblemployees where role='Employee' ");	
+}
 ?>
 <div class="content pb-0">
             <div class="orders">
@@ -17,10 +27,12 @@ $res=mysqli_query($con,"select * from tblemployees where role=2 order by id desc
                      <div class="card">
                         <div class="card-body">
                            <h4 class="box-title">Employee Details </h4>
+						   <?php if($_SESSION['ROLE']=='SuperAdmin'){?>
 						   <h4 class="box_title_link"><a href="add_employee.php">Add Employee</a> </h4>
-                        </div>
+						   <?php }?>
+						</div>
 						<form method="POST" action="employee.php">
-						<input type="text" name="get_id" placeholder="Enter EmpId To Search" >
+						<input type="text" name="get_id" placeholder="Enter Emp Id To Search" >
 						<input type="submit" name="search_by_id" class="btn btn-primary" value="Search">
                         </form>
 						<?php
@@ -54,14 +66,16 @@ $res=mysqli_query($con,"select * from tblemployees where role=2 order by id desc
                               <table class="table ">
                                  <thead>
                                     <tr>
-                                       <th width="5%">S.No</th>
-                                       <th width="5%">EmpId</th>
-                                       <th width="20%">Name</th>
-									   <th width="20%">Group</th>
+                                       <th style="text-align:center;" width="5%">S.No</th>
+                                       <th style="text-align:center;" width="15%">Emp Id</th>
+                                       <th style="text-align:center;"  width="40%">Name</th>
+									   <th style="text-align:center;"width="20%">Group</th>
 									   
-                                       <th width="20%">Department</th>
-									   <th width="20%" >Gender</th>
-									   <th width="20%" align="left">Password</th>
+                                       <th style="text-align:center;" width="10%">Department</th>
+									   <th style="text-align:center;" width="10%" >Gender</th>
+									   <?php if($_SESSION['ROLE']=='SuperAdmin'){?>
+									   <th style="text-align:center;" width="10%" >Password</th>
+									   <?php } ?>
                                     </tr>
                                  </thead>
                                  <tbody>
@@ -69,14 +83,18 @@ $res=mysqli_query($con,"select * from tblemployees where role=2 order by id desc
 									$i=1;
 									while($row=mysqli_fetch_assoc($res)){?>
 									<tr>
-                                       <td><?php echo $i?></td>
-									   <td><?php echo $row['EmpId']?></td>
-                              <td><?php echo $row['Name']?></td>
-									   <td><?php echo $row['Group']?></td>
+                                       <td style="text-align:center;"><?php echo $i?></td>
+									   <td style="text-align:center;"><?php echo $row['EmpId']?></td>
+                                       <td style="text-align:center;"><?php echo $row['Name']?></td>
+									   <td style="text-align:center;"><?php echo $row['Group']?></td>
 									   
-									   <td><?php echo $row['Department']?></td>
-									   <td><?php echo $row['Gender']?></td>
-									   <td><?php echo $row['Password']?></td>
+									   <td style="text-align:center;"><?php echo $row['Department']?></td>
+									   <td style="text-align:center;"><?php echo $row['Gender']?></td>
+									  <?php if($_SESSION['ROLE']=='SuperAdmin'){?>
+									  <td style="text-align:center;"><?php echo $row['Password']?></td>
+									  <td style="text-align:center;"><a href="employee.php?EmpId=<?php echo $row['EmpId']?>&type=delete">Delete</a></td>
+									  
+									<?php } ?>
 									<?php 
 									$i++;
 									} ?>
@@ -90,6 +108,3 @@ $res=mysqli_query($con,"select * from tblemployees where role=2 order by id desc
             </div>
 		  </div>
          
-<?php
-require('footer.inc.php');
-?>

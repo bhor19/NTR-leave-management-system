@@ -1,21 +1,14 @@
 <?php
 require('top.inc.php');
-if($_SESSION['ROLE']!='Admin' && $_SESSION['ROLE']!='SuperAdmin' ){
+if($_SESSION['ROLE']=='Employee'){
 	header('location:ntr.php?id='.$_SESSION['USER_ID']);
 	die();
 }
-
 if(isset($_GET['type']) && $_GET['type']=='delete' && isset($_GET['id'])){
 	$id=mysqli_real_escape_string($con,$_GET['id']);
 	mysqli_query($con,"delete from `ntr` where id='$id'");
 }
-$condition = "";
-$querry = "";
-$res2 = "";
-$res1 ="";
-//$EmpId=$_SESSION['USER_ID'];
-//$res=mysqli_query($con,"select * from `ntr`  ");
-//$res=mysqli_query($con,"select * from ntr where EmpId='$EmpId'");
+
 ?>
 <?php
 $sub_sql="";
@@ -29,39 +22,21 @@ if(isset($_POST['submit']))
 	  $toArr=explode("/",$to);
 	  
 	  $to=$toArr['2'].'-'.$toArr['1'].'-'.$toArr['0'];
-	  $EmpId = $_POST['get_id'];
 	  $sub_sql="where NTR_Date >= '$from' && NTR_Date <= '$to'";
-	   $sub_sql1="where EmpId = '$EmpId'";
-if(isset($_POST['get_id'])!= "" )
-{
-	$sub_sql1="where EmpId = '$EmpId'";	
-	$query="SELECT * FROM ntr $sub_sql1 and NTR_Date >= '$from' && NTR_Date <= '$to'";
-	$res2=mysqli_query($con,$query);	
 }
-
-/*
-if(isset($_POST['EmpId'])== "" && isset($_POST['fromArr'])!= "" && isset($_POST['toArr'])!= "" )
+$Department=$_SESSION['DEPARTMENT'];
+if($_SESSION['ROLE']=='Admin')
 {
-	 $sub_sql="where NTR_Date >= '$from' && NTR_Date <= '$to'";	
-	 $query="SELECT * FROM ntr $sub_sql ";
-	 $res2=mysqli_query($con,$query);
-	 echo 'i am also hero';	
+	
+$res=mysqli_query($con,"select * from ntr $sub_sql where Department='$Department' order by id desc ");
 }
-/
-/*else if(isset($_POST['EmpId'])== "" && isset($_POST['fromArr'])== "" && isset($_POST['toArr'])== "" )
+else 
 {
-	 echo 'i am totally black';	
-}*/
-/*else
-{
-	$query="SELECT * FROM ntr";
-	$res2=mysqli_query($con,$query);	
+$res=mysqli_query($con,"select * from ntr $sub_sql order by id desc");	
 }
-*/	
-}
-//$query="SELECT * FROM ntr";
-	//$res2=mysqli_query($con,$query);
+//$res=mysqli_query($con,"select * from ntr $sub_sql order by id desc");
 ?>
+
 
 
 
@@ -75,27 +50,53 @@ if(isset($_POST['EmpId'])== "" && isset($_POST['fromArr'])!= "" && isset($_POST[
                            <h4 class="box-title"> NTR Record</h4>
                         </div>
 						<br>
-						<form method="POST" action="dashboard.php">
-						<input type="text" name="get_id" placeholder="Enter EmpId To Search" >
+						<form method="POST" >
+						<input type="text" name="get_id" placeholder="Enter Emp Id To Search" >
 						<input type="submit" name="search_by_id" class="btn btn-primary" value="Search">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 						
 						<label for="from">From</label>
-                        <input type="text" id="from" name="from" >
-						<label for="to">to</label>
-						<input type="text" id="to" name="to" >
+                        <input type="text" id="from" name="from" placeholder="Date" >
+						&nbsp;&nbsp;
+						<label for="to">To</label>
+						<input type="text" id="to" name="to" placeholder="Date">
 						<input type="submit" name="submit" class="btn btn-primary" value="Filter">
 						</form>
-												                                               					  						
+						
+						<?php
+						$subi_sql="";
+						if(isset($_POST['search_by_id']))
+						{
+							$id = $_POST['get_id'];
+							$query="SELECT * FROM ntr WHERE EmpId='$id'";
+							$query_run=mysqli_query($con,$query);
+							
+							if(mysqli_num_rows($query_run)>0)
+							{
+								while($row=mysqli_fetch_array($query_run))
+								{
+									$subi_sql="WHERE EmpId='$id'";
+								}
+								$res=mysqli_query($con,"select * from ntr $subi_sql order by id desc");
+								
+
+							}
+							else
+							{
+								echo "No Data Found";
+							}
+						}
+						?>
+						
                         <div class="card-body--">
                            <div class="table-stats order-table ov-h">
                               <table class="table ">
                                  <thead>
                                     <tr>
                                        <th width="5%">S.No</th>
-                                       <th width="5%">EmpId</th>
-                                        
+                                       <th width="15%">Emp Id</th>
+                                        <th width="15%">Department</th>
 									   
-                                       <th width="20%">NTR_Date
+                                       <th width="15%">NTR_Date
 									   
 									   </th>
 									   
@@ -107,36 +108,31 @@ if(isset($_POST['EmpId'])== "" && isset($_POST['fromArr'])!= "" && isset($_POST[
 									   
 									   </th>
 									   
-									   <th width="20%" style="text-align:left">Reason</th>
+									   <th width="30%" style="text-align:left;">Reason</th>
 									   
                                     </tr>
                                  </thead>
                                  <tbody>
-								 								 
-                                    <?php
-									if(isset($_POST['get_id'])!= "" )
- 									{
+								 
+                                    <?php 
 									$i=1;
-									while($row=mysqli_fetch_assoc($res2))
+									while($row=mysqli_fetch_assoc($res))
 									{
 										?>
 									<tr>
                                        <td><?php echo $i?></td>
 									   <td><?php echo $row['EmpId']?></td>
-                                       
+                                       <td><?php echo $row['Department']?></td>
 									   <td><?php echo $row['NTR_Date']?></td>
 									   <td><?php echo $row['NTR_From']?></td>
 									   <td><?php echo $row['NTR_To']?></td>
 									   <td><?php echo $row['Reason']?></td>
-									   <td><a href="dashboard.php?id=<?php echo $row['id']?>&type=delete">Delete</a></td>
+									   <td><a href="ntr-record.php?id=<?php echo $row['id']?>&type=delete">Delete</a></td>
 						
                                     </tr>
 									<?php 
 									$i++;
-									}}
-
-									
-	?>
+									} ?>
                                  </tbody>
                               </table>
                            </div>
@@ -144,6 +140,7 @@ if(isset($_POST['EmpId'])== "" && isset($_POST['fromArr'])!= "" && isset($_POST[
                      </div>
                   </div>
                </div>
+			   
             </div>
 		  </div>
 		  

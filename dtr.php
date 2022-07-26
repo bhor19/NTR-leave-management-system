@@ -4,7 +4,7 @@ require('top.inc.php');
 
 $EmpId=$_SESSION['USER_ID'];
 
-$res=mysqli_query($con,"select * from ntr where EmpId='$EmpId'");
+$res=mysqli_query($con,"select * from dtr where EmpId='$EmpId'");
 
 ?>
 <div class="content pb-0">
@@ -13,12 +13,12 @@ $res=mysqli_query($con,"select * from ntr where EmpId='$EmpId'");
                   <div class="col-xl-12">
                      <div class="card">
 					 <div>
-					 <center><a href="ntr-apply.php"><input style="background-color: #4CAF50;" type="submit" value="Apply For NTR"></a> 
-					 <a href="ntr-pdf.php"><input type="submit" value="Print" style="background-color: red;"></a></center>
+					 <center><a href="dtr-apply.php"><input style="background-color: #4CAF50;" type="submit" value="Apply For DTR"></a> 
+					 <a href="dtr-pdf.php"><input type="submit" value="Print" style="background-color: red;"></a></center>
 					 </div>
 					 
                         <div class="card-body">
-                           <h4 class="box-title"> NTR Record</h4>
+                           <h4 class="box-title"> DTR Record</h4>
                         </div>
                         <div class="card-body--">
                            <div class="table-stats order-table ov-h">
@@ -29,15 +29,15 @@ $res=mysqli_query($con,"select * from ntr where EmpId='$EmpId'");
                                        <th width="15%">Emp Id</th>
                                         <th width="15%">Department</th>
 									   
-                                       <th width="15%">NTR_Date
+                                       <th width="15%">DTR_Date
 									   
 									   </th>
 									   
-									   <th width="20%">NTR_From
+									   <th width="20%">DTR_From
 									   
 									   </th>
 									   
-									   <th width="20%">NTR_To
+									   <th width="20%">DTR_To
 									   
 									   </th>
 									   
@@ -53,9 +53,9 @@ $res=mysqli_query($con,"select * from ntr where EmpId='$EmpId'");
                                        <td><?php echo $i?></td>
 									   <td><?php echo $row['EmpId']?></td>
 									   <td><?php echo $row['Department']?></td>
-                                       <td><?php echo $row['NTR_Date']?></td>
-									   <td><?php echo $row['NTR_From']?></td>
-									   <td><?php echo $row['NTR_To']?></td>
+                                       <td><?php echo $row['DTR_Date']?></td>
+									   <td><?php echo $row['DTR_From']?></td>
+									   <td><?php echo $row['DTR_To']?></td>
 									   <td style="text-align:left;"><?php echo $row['Reason']?></td>
 									   
 						

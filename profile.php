@@ -1,8 +1,8 @@
 <?php
 require('top.inc.php');
  
-$Name=$_SESSION['USER_NAME'];
-$res=mysqli_query($con,"select * from tblemployees where role=2 && Name='$Name'");
+$EmpId=$_SESSION['USER_ID'];
+$res=mysqli_query($con,"select * from tblemployees where role='Employee' && EmpId='$EmpId'");
 ?>
 <div class="content pb-0">
             <div class="orders">
@@ -18,8 +18,8 @@ $res=mysqli_query($con,"select * from tblemployees where role=2 && Name='$Name'"
                                  <thead>
                                     <tr>
                                        <th width="5%">S.No</th>
-                                       <th width="5%">EmpId</th>
-                                       <th width="20%">Name</th>
+                                       <th width="15%">Emp Id</th>
+                                       <th width="40%">Name</th>
 									   <th width="20%">Group</th>
                                 <th width="20%">Department</th>
 									   <th width="20%">Gender</th>
@@ -54,6 +54,3 @@ $res=mysqli_query($con,"select * from tblemployees where role=2 && Name='$Name'"
                </div>
             </div>
 		  </div>       
-<?php
-require('footer.inc.php');
-?>

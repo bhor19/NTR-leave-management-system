@@ -1,5 +1,9 @@
 <?php
 require('top.inc.php');
+if($_SESSION['ROLE']!='SuperAdmin' ){
+	header('location:login.php?id='.$_SESSION['USER_ID']);
+	die();
+}
 $EmpId='';
 $Name='';
 $Group='';
@@ -7,6 +11,7 @@ $Group='';
 $Department='';
 $Gender='';
 $id='';
+
 if(isset($_GET['EmpId'])){
 	$id=mysqli_real_escape_string($con,$_GET['EmpId']);
 	
@@ -34,9 +39,9 @@ if(isset($_POST['submit'])){
 	if($id>0){
 		$sql="update tblemployees set EmpId='$EmpId', Name='$Name', Group='$Group', Department='$Department', Gender='$Gender', Password='$Password' where id='$id'";
 	}else{
-		$sql="insert into tblemployees(`EmpId`,`Name`,`Group`,`Department`,`Gender`,`Password`,`Role`) values('$EmpId','$Name','$Group','$Department','$Gender', '$Password','1')";
+		$sql="insert into tblemployees(`EmpId`,`Name`,`Group`,`Department`,`Gender`,`Password`,`Role`) values('$EmpId','$Name','$Group','$Department','$Gender', '$Password','Admin')";
 	}
-	echo $sql;
+	//echo $sql;
 	mysqli_query($con,$sql);
 	header('location:admin.php');
 	die();
@@ -53,8 +58,8 @@ if(isset($_POST['submit'])){
                            <form method="post">
 						   
 							   <div class="form-group">
-									<label class=" form-control-label">AdminId</label>
-									<input type="text" value="<?php echo $EmpId?>" name="EmpId" placeholder="Enter Admin Id" class="form-control" required>
+									<label class=" form-control-label">Emp Id</label>
+									<input type="text" value="<?php echo $EmpId?>" name="EmpId" placeholder="Enter Admin Emp Id" class="form-control" required>
 								</div>
 								
 								<div class="form-group">
@@ -63,23 +68,49 @@ if(isset($_POST['submit'])){
 								</div>
 								<div class="form-group">
 									<label class=" form-control-label">Group</label>
-									<input type="text" value="<?php echo $Group?>" name="Group" placeholder="Enter Admin Group" class="form-control" required>
+									<select name="Group" required class="form-control" >
+									<option value="<?php echo $Group?>">Select Admin Group</option>
+									<option value="Industrial">Industrial</option>
+									<option value="Non-Industrial">Non-Industrial</option>
+									</select>
 								</div>
 								<div class="form-group">
 									<label class=" form-control-label">Department</label>
 									<select name="Department" required class="form-control">
-										<option value="">Select Department</option>
-										<?php
-										$res=mysqli_query($con,"select * from tbldepartments order by Department ");
-										while($row=mysqli_fetch_assoc($res)){
-											if($id==$row['Department']){
-												echo "<option selected='selected' value=".$row['Department'].">".$row['Department']."</option>";
-											}else{
-												echo "<option value=".$row['Department'].">".$row['Department']."</option>";
-											}
-										}
-										
-										?>
+										<option value="<?php echo $Department?>">Select Department</option>
+										<option value="ALWC">ALWC</option>
+										<option value="ARCC">ARCC</option>
+										<option value="CASO">CASO</option>
+										<option value="CES">CES</option>
+										<option value="CRC">CRC</option>
+										<option value="D/OFFICE">D/OFFICE</option>
+										<option value="DET BWG">DET BWG</option>
+										<option value="DEV LAB">DEV LAB</option>
+										<option value="EST">EST</option>
+										<option value="FCRC">FCRC</option>
+										<option value="FIN">FIN</option>
+										<option value="FIRE STN">FIRE STN</option>
+										<option value="GE">GE</option>
+										<option value="HQ">HQ</option>
+										<option value="IN">IN</option>
+										<option value="IN DIG CELL">IN DIG CELL</option>
+										<option value="LPO">LPO</option>
+										<option value="M & R">M & R</option>
+										<option value="M/CELL">M/CELL</option>
+										<option value="MCO">MCO</option>
+										<option value="ME">ME</option>
+										<option value="MFR CELL">MFR CELL</option>
+										<option value="MI ROOM">MI ROOM</option>
+										<option value="MR">MR</option>
+										<option value="MT">MT</option>
+										<option value="OSS">OSS</option>
+										<option value="P & P">P & P</option>
+										<option value="PM OFFICE">PM OFFICE</option>
+										<option value="QM OFFICE">QM OFFICE</option>
+										<option value="RG">RG</option>
+										<option value="TL">TL</option>
+										<option value="TT CELL">TT CELL</option>
+										<option value="WSG">WSG</option>
 									</select>
 								</div>
 								<div class="form-group">
@@ -92,9 +123,9 @@ if(isset($_POST['submit'])){
 								</div>
 								<div class="form-group">
 									<label class=" form-control-label">Password</label>
-									<input type="password"  name="Password" placeholder="Enter Admin Password" class="form-control" required>
+									<input type="text"  name="Password" placeholder="Enter Admin Password" class="form-control" required>
 								</div>
-							   <?php if($_SESSION['ROLE']==1){?>
+							   <?php if($_SESSION['ROLE']=='SuperAdmin'){?>
 							   <button  type="submit" name="submit" class="btn btn-lg btn-info btn-block">
 							   <span id="payment-button-amount">Submit</span>
 							   </button>
@@ -109,6 +140,3 @@ if(isset($_POST['submit'])){
             </div>
          </div>
                   
-<?php
-require('footer.inc.php');
-?>
